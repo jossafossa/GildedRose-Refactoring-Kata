@@ -36,58 +36,104 @@ export class GildedRose {
     this.items = items;
   }
 
+  updateBackstagePass(item: Item): Item {
+    // abort if not a backstage pass
+    if (item.name !== "Backstage passes to a TAFKAL80ETC concert") {
+      return item;
+    }
+
+    // Backstage pass increases in quality. Max 50
+    if (item.quality < 50) {
+      item.quality++;
+    }
+
+    // Backstage passes increase in quality as the concert approaches
+    if (item.quality < 50) {
+      if (item.sellIn < 10) {
+        item.quality++;
+      }
+      if (item.sellIn < 5) {
+        item.quality++;
+      }
+    }
+    return item;
+  }
+
+  updateExpiringDate(item: Item): Item {
+    if (item.name === "Sulfuras, Hand of Ragnaros") {
+      return item;
+    }
+
+    item.sellIn--;
+
+    return item;
+  }
+
+  invalidateBackstagePass(item: Item): Item {
+    if (item.name !== "Backstage passes to a TAFKAL80ETC concert") {
+      return item;
+    }
+
+    // backstage pass is worthless after the concert
+    if (item.sellIn < 0) {
+      item.quality = 0;
+    }
+
+    return item;
+  }
+
+  updateBrie(item: Item): Item {
+    if (item.name !== "Aged Brie") {
+      return item;
+    }
+
+    // Brie increases in quality. Max 50
+    if (item.quality < 50) {
+      item.quality++;
+    }
+
+    // Brie gets an extra quality point after when it expires
+    if (item.sellIn < 0) {
+      if (item.quality < 50) {
+        item.quality++;
+      }
+    }
+
+    return item;
+  }
+
   /**
    * Update a single item
    * @param item The item to update
    * @returns item - the updated item
    */
   updateItem(item: Item): Item {
+    // handle expiring date
+    item = this.updateExpiringDate(item);
+
+    // Handle backstage pass
     if (item.name === "Backstage passes to a TAFKAL80ETC concert") {
-      if (item.quality < 50) {
-        item.quality++;
-      }
-
-      if (item.quality < 50) {
-        if (item.sellIn < 11) {
-          item.quality++;
-        }
-        if (item.sellIn < 6) {
-          item.quality++;
-        }
-      }
+      item = this.updateBackstagePass(item);
     }
 
-    if (item.name !== "Sulfuras, Hand of Ragnaros") {
-      item.sellIn--;
-    }
+    // Invalidate expired backstage pass
+    item = this.invalidateBackstagePass(item);
 
-    if (item.name === "Backstage passes to a TAFKAL80ETC concert") {
-      if (item.sellIn < 0) {
-        item.quality = 0;
-      }
-    }
-
-    if (item.name === "Aged Brie") {
-      if (item.quality < 50) {
-        item.quality++;
-      }
-
-      if (item.sellIn < 0) {
-        if (item.quality < 50) {
-          item.quality++;
-        }
-      }
-    }
+    // handle Brie
+    item = this.updateBrie(item);
 
     // other
     if (item.name !== "Aged Brie") {
       if (item.name !== "Backstage passes to a TAFKAL80ETC concert") {
         if (item.name !== "Sulfuras, Hand of Ragnaros") {
+          // All items degrade and extra point after they expire
           if (item.sellIn < 0) {
             if (item.quality > 0) {
               item.quality--;
             }
           }
+
+          // All other items degrade in quality. min 0
           if (item.quality > 0) {
             item.quality--;
           }
