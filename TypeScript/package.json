@@ -9,7 +9,7 @@
     "preview": "vite preview",
     "precompile": "rimraf app/**/*.js test/**/*.js",
     "compile": "tsc",
-    "pretest": "rimraf app/**/*.js test/**/*.js",
+    "pretest": "rimraf 'app/**/*.js' 'test/**/*.js'",
     "test:jest": "jest",
     "test:jest:watch": "jest --watchAll",
     "test:mocha": "nyc mocha",

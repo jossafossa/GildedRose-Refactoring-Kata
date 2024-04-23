@@ -25,5 +25,11 @@ const gildedRose: GildedRose = new GildedRose([
 ]);
 
 // test the output
-let output: Array<Item> = gildedRose.updateQualities();
+let output: Array<Item> = gildedRose.updateQuality();
 console.log(output);
+
+// add gildedrose to window for testing
+(window as any).gildedRose = gildedRose;
+(window as any).agedBrie = agedBrie;
+(window as any).backstagePass = backstagePass;
+(window as any).Sulfuras = Sulfuras;

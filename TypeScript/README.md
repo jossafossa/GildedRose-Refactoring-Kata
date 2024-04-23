@@ -59,3 +59,5 @@ There are instructions in the [TextTest Readme](../texttests/README.md) for sett
 
 
 ## Notities:
+- Ten eerste heb ik het project over gezet naar vite
+- Ik heb Item omgezet naar een Type 
