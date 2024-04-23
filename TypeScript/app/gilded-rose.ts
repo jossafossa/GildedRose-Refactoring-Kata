@@ -37,11 +37,6 @@ export class GildedRose {
   }
 
   updateBackstagePass(item: Item): Item {
-    // abort if not a backstage pass
-    if (item.name !== "Backstage passes to a TAFKAL80ETC concert") {
-      return item;
-    }
-
     // Backstage pass increases in quality. Max 50
     if (item.quality < 50) {
       item.quality++;
@@ -60,20 +55,12 @@ export class GildedRose {
   }
 
   updateExpiringDate(item: Item): Item {
-    if (item.name === "Sulfuras, Hand of Ragnaros") {
-      return item;
-    }
-
     item.sellIn--;
 
     return item;
   }
 
   invalidateBackstagePass(item: Item): Item {
-    if (item.name !== "Backstage passes to a TAFKAL80ETC concert") {
-      return item;
-    }
-
     // backstage pass is worthless after the concert
     if (item.sellIn < 0) {
       item.quality = 0;
@@ -109,35 +96,28 @@ export class GildedRose {
    */
   updateItem(item: Item): Item {
     // handle expiring date
-    item = this.updateExpiringDate(item);
-
-    // Handle backstage pass
-    if (item.name === "Backstage passes to a TAFKAL80ETC concert") {
-      item = this.updateBackstagePass(item);
+    if (item.name !== "Sulfuras, Hand of Ragnaros") {
+      item = this.updateExpiringDate(item);
     }
 
-    // Invalidate expired backstage pass
-    item = this.invalidateBackstagePass(item);
-
-    // handle Brie
-    item = this.updateBrie(item);
-
-    // other
-    if (item.name !== "Aged Brie") {
-      if (item.name !== "Backstage passes to a TAFKAL80ETC concert") {
-        if (item.name !== "Sulfuras, Hand of Ragnaros") {
-          // All items degrade and extra point after they expire
-          if (item.sellIn < 0) {
-            if (item.quality > 0) {
-              item.quality--;
-            }
-          }
-
-          // All other items degrade in quality. min 0
-          if (item.quality > 0) {
-            item.quality--;
-          }
+    if (item.name === "Backstage passes to a TAFKAL80ETC concert") {
+      // Handle backstage pass
+      item = this.updateBackstagePass(item);
+      item = this.invalidateBackstagePass(item);
+    } else if (item.name === "Aged Brie") {
+      // Handle Brie
+      item = this.updateBrie(item);
+    } else if (item.name !== "Sulfuras, Hand of Ragnaros") {
+      // All items degrade and extra point after they expire
+      if (item.sellIn < 0) {
+        if (item.quality > 0) {
+          item.quality--;
         }
+      }
+
+      // All other items degrade in quality. min 0
+      if (item.quality > 0) {
+        item.quality--;
       }
     }
 
