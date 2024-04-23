@@ -54,10 +54,21 @@ There are instructions in the [TextTest Readme](../texttests/README.md) for sett
     executable:${TEXTTEST_HOME}/python/texttest_fixture.py
     interpreter:python
 
+## Notities
 
-
-
-
-## Notities:
-- Ten eerste heb ik het project over gezet naar vite
-- Ik heb Item omgezet naar een Type 
+- Ik heb het project over gezet naar vite.
+- Ik heb Item omgezet naar een Type. Maar dat werkte niet lekker met de tests. Dus dat heb ik weer teruggedraaid.
+- Ik moest even wennen aan de tests. Daarom had ik vite opgezet. Maar toen ik er eenmaal aan gewend was keek ik niet meer naar vite en alleen maar naar de output van test:jest:watch.
+- Mijn taktiek was eerst de ifstatements 
+- Ik heb een soort mapping object aangemaakt om de onnodige ingewikkelde keys te managen
+```js
+/**
+ * Types of items
+ */
+const ItemType = {
+  BRIE: "Aged Brie",
+  BACKSTAGE_PASS: "Backstage passes to a TAFKAL80ETC concert",
+  SULFURAS: "Sulfuras, Hand of Ragnaros",
+};
+```
+- Ik heb de aanname gemaakt dat alle quality van de items gecapt moet worden tussen 0 en 50.

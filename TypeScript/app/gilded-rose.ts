@@ -20,7 +20,33 @@ export class Item {
     this.sellIn = sellIn;
     this.quality = quality;
   }
+
+  /**
+   * Alter the quality of the item
+   * @param value The value to add to the quality
+   * @returns Item - the updated item
+   */
+  changeQuality(change: number): Item {
+    // Increase the quality
+    this.quality += change;
+
+    // Quality should be kept between 0 and 50
+    this.quality = Math.max(this.quality, 0);
+    this.quality = Math.min(this.quality, 50);
+
+    // return the item
+    return this;
+  }
 }
+
+/**
+ * Types of items
+ */
+const ItemType = {
+  BRIE: "Aged Brie",
+  BACKSTAGE_PASS: "Backstage passes to a TAFKAL80ETC concert",
+  SULFURAS: "Sulfuras, Hand of Ragnaros",
+};
 
 /**
  * Represents the GildedRose class
@@ -36,57 +62,34 @@ export class GildedRose {
     this.items = items;
   }
 
-  updateBackstagePass(item: Item): Item {
-    // Backstage pass increases in quality. Max 50
-    if (item.quality < 50) {
-      item.quality++;
-    }
+  /**
+   * Handle the backstage pass
+   * @param item The item to handle
+   */
+  handleBackstagePass(item: Item): void {
+    // Backstage pass increases in quality
+    item.changeQuality(1);
 
-    // Backstage passes increase in quality as the concert approaches
-    if (item.quality < 50) {
-      if (item.sellIn < 10) {
-        item.quality++;
-      }
-      if (item.sellIn < 5) {
-        item.quality++;
-      }
-    }
-    return item;
+    // Backstage passes increase in quality within 10 days of the concert
+    if (item.sellIn < 10) item.changeQuality(1);
+
+    // Backstage passes increase in quality within 5 days of the concert
+    if (item.sellIn < 5) item.changeQuality(1);
+
+    // backstage passes are worthless after the concert
+    if (item.sellIn < 0) item.quality = 0;
   }
 
-  updateExpiringDate(item: Item): Item {
-    item.sellIn--;
-
-    return item;
-  }
-
-  invalidateBackstagePass(item: Item): Item {
-    // backstage pass is worthless after the concert
-    if (item.sellIn < 0) {
-      item.quality = 0;
-    }
-
-    return item;
-  }
-
-  updateBrie(item: Item): Item {
-    if (item.name !== "Aged Brie") {
-      return item;
-    }
-
-    // Brie increases in quality. Max 50
-    if (item.quality < 50) {
-      item.quality++;
-    }
+  /**
+   * Handle the Brie
+   * @param item The item to handle
+   */
+  handleBrie(item: Item): void {
+    // Brie increases in quality
+    item.changeQuality(1);
 
     // Brie gets an extra quality point after when it expires
-    if (item.sellIn < 0) {
-      if (item.quality < 50) {
-        item.quality++;
-      }
-    }
-
-    return item;
+    if (item.sellIn < 0) item.changeQuality(1);
   }
 
   /**
@@ -96,31 +99,28 @@ export class GildedRose {
    */
   updateItem(item: Item): Item {
     // handle expiring date
-    if (item.name !== "Sulfuras, Hand of Ragnaros") {
-      item = this.updateExpiringDate(item);
-    }
+    if (item.name !== ItemType.SULFURAS) item.sellIn--;
 
-    if (item.name === "Backstage passes to a TAFKAL80ETC concert") {
-      // Handle backstage pass
-      item = this.updateBackstagePass(item);
-      item = this.invalidateBackstagePass(item);
-    } else if (item.name === "Aged Brie") {
-      // Handle Brie
-      item = this.updateBrie(item);
-    } else if (item.name !== "Sulfuras, Hand of Ragnaros") {
+    // Handle backstage pass
+    if (item.name === ItemType.BACKSTAGE_PASS) this.handleBackstagePass(item);
+
+    // Handle Brie
+    if (item.name === ItemType.BRIE) this.handleBrie(item);
+
+    // All other items
+    if (
+      ![ItemType.SULFURAS, ItemType.BACKSTAGE_PASS, ItemType.BRIE].includes(
+        item.name
+      )
+    ) {
       // All items degrade and extra point after they expire
-      if (item.sellIn < 0) {
-        if (item.quality > 0) {
-          item.quality--;
-        }
-      }
+      if (item.sellIn < 0) item.changeQuality(-1);
 
       // All other items degrade in quality. min 0
-      if (item.quality > 0) {
-        item.quality--;
-      }
+      item.changeQuality(-1);
     }
 
+    // return the item
     return item;
   }
 
@@ -130,11 +130,6 @@ export class GildedRose {
    */
   updateQuality(): Array<Item> {
     // update all the quanties
-    this.items.map((value) => {
-      return this.updateItem(value);
-    });
-
-    // return the updated items
-    return this.items;
+    return this.items.map((value) => this.updateItem(value));
   }
 }

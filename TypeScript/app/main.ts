@@ -1,21 +1,13 @@
 import { GildedRose, Item } from "./gilded-rose";
 
 // initialize items
-const agedBrie: Item = {
-  name: "Aged Brie",
-  sellIn: 10,
-  quality: 2,
-};
-const backstagePass: Item = {
-  name: "Backstage passes to a TAFKAL80ETC concert",
-  sellIn: 10,
-  quality: 2,
-};
-const Sulfuras: Item = {
-  name: "Sulfuras, Hand of Ragnaros",
-  sellIn: 10,
-  quality: 2,
-};
+const agedBrie: Item = new Item("Aged Brie", 10, 2);
+const backstagePass: Item = new Item(
+  "Backstage passes to a TAFKAL80ETC concert",
+  10,
+  2
+);
+const Sulfuras: Item = new Item("Sulfuras, Hand of Ragnaros", 10, 2);
 
 // create an instance
 const gildedRose: GildedRose = new GildedRose([
@@ -27,9 +19,3 @@ const gildedRose: GildedRose = new GildedRose([
 // test the output
 let output: Array<Item> = gildedRose.updateQuality();
 console.log(output);
-
-// add gildedrose to window for testing
-(window as any).gildedRose = gildedRose;
-(window as any).agedBrie = agedBrie;
-(window as any).backstagePass = backstagePass;
-(window as any).Sulfuras = Sulfuras;
