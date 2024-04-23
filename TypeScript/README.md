@@ -1,6 +1,7 @@
 
 # Notities
 
+- Ik ben ongeveer 3 uur bezig geweest + 1 uur comments, documentatie etc.
 - Ik heb het project over gezet naar vite.
 - Ik heb Item omgezet naar een Type. Maar dat werkte niet lekker met de tests. Dus dat heb ik weer teruggedraaid.
 - Ik moest even wennen aan de tests. Daarom had ik vite opgezet. Maar toen ik er eenmaal aan gewend was keek ik niet meer naar vite en alleen maar naar de output van test:jest:watch.
