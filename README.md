@@ -1,3 +1,7 @@
+# Notities:
+- Ga naar het [Typescript project](Typescript/README.md)
+
+
 _Support this and all my katas via [Patreon](https://www.patreon.com/EmilyBache)_
 
 # Gilded Rose Refactoring Kata
