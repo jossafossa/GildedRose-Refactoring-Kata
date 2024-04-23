@@ -1,5 +1,5 @@
 # Notities:
-- Ga naar het [Typescript project](Typescript/README.md)
+- Ga naar het [Typescript project](TypeScript/README.md)
 
 
 _Support this and all my katas via [Patreon](https://www.patreon.com/EmilyBache)_
